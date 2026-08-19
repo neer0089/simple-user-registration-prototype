@@ -36,7 +36,12 @@ export const createSession = (userId: string, ttlMs: number): SessionRecord => {
     `INSERT INTO sessions (id, user_id, expires_at, created_at)
      VALUES (@id, @userId, @expiresAt, @createdAt)`,
   );
-  statement.run(session);
+  statement.run({
+    id: session.id,
+    userId: session.userId,
+    expiresAt: session.expiresAt,
+    createdAt: session.createdAt,
+  });
 
   return session;
 };

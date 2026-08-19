@@ -3,6 +3,16 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import RegisterPage from "./page";
 
+const pushMock = jest.fn();
+const refreshMock = jest.fn();
+
+jest.mock("next/navigation", () => ({
+  useRouter: () => ({
+    push: pushMock,
+    refresh: refreshMock,
+  }),
+}));
+
 describe("RegisterPage", () => {
   it("submits registration form and shows success message", async () => {
     const fetchMock = jest.fn().mockResolvedValue({

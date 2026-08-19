@@ -13,7 +13,6 @@ jest.mock("@/lib/db", () => ({
 }));
 jest.mock("@/repositories/user.repository");
 
-const mockedBcrypt = bcrypt as jest.Mocked<typeof bcrypt>;
 const mockedCreateUser = createUser as jest.MockedFunction<typeof createUser>;
 const mockedFindUserByEmail = findUserByEmail as jest.MockedFunction<typeof findUserByEmail>;
 const mockedToPublicUser = toPublicUser as jest.MockedFunction<typeof toPublicUser>;
@@ -25,7 +24,7 @@ describe("POST /api/register", () => {
 
   it("returns 201 for valid registration", async () => {
     mockedFindUserByEmail.mockReturnValue(null);
-    mockedBcrypt.hash.mockResolvedValue("hashed-password");
+    (bcrypt.hash as jest.Mock).mockResolvedValue("hashed-password");
     mockedCreateUser.mockReturnValue({
       id: "user-1",
       email: "jane@example.com",
@@ -58,7 +57,7 @@ describe("POST /api/register", () => {
 
     expect(response.status).toBe(201);
     expect(body.user.id).toBe("user-1");
-    expect(mockedBcrypt.hash).toHaveBeenCalledWith("strongpass", 10);
+    expect(bcrypt.hash).toHaveBeenCalledWith("strongpass", 10);
   });
 
   it("returns 409 for duplicate email", async () => {

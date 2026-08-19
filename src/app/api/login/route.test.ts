@@ -15,7 +15,6 @@ jest.mock("@/lib/db", () => ({
 jest.mock("@/repositories/session.repository");
 jest.mock("@/repositories/user.repository");
 
-const mockedBcrypt = bcrypt as jest.Mocked<typeof bcrypt>;
 const mockedCreateSession = createSession as jest.MockedFunction<typeof createSession>;
 const mockedFindUserByEmail = findUserByEmail as jest.MockedFunction<typeof findUserByEmail>;
 const mockedToPublicUser = toPublicUser as jest.MockedFunction<typeof toPublicUser>;
@@ -35,7 +34,7 @@ describe("POST /api/login", () => {
       createdAt: "2026-01-01T00:00:00.000Z",
       updatedAt: "2026-01-01T00:00:00.000Z",
     });
-    mockedBcrypt.compare.mockResolvedValue(true);
+    (bcrypt.compare as jest.Mock).mockResolvedValue(true);
     mockedCreateSession.mockReturnValue({
       id: "session-1",
       userId: "user-1",
@@ -72,7 +71,7 @@ describe("POST /api/login", () => {
       createdAt: "2026-01-01T00:00:00.000Z",
       updatedAt: "2026-01-01T00:00:00.000Z",
     });
-    mockedBcrypt.compare.mockResolvedValue(false);
+    (bcrypt.compare as jest.Mock).mockResolvedValue(false);
 
     const request = new Request("http://localhost/api/login", {
       method: "POST",

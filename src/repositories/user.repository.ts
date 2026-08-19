@@ -85,7 +85,15 @@ export const createUser = (input: CreateUserInput): UserRecord => {
     `INSERT INTO users (id, email, password_hash, full_name, bio, created_at, updated_at)
      VALUES (@id, @email, @passwordHash, @fullName, @bio, @createdAt, @updatedAt)`,
   );
-  statement.run(user);
+  statement.run({
+    id: user.id,
+    email: user.email,
+    passwordHash: user.passwordHash,
+    fullName: user.fullName,
+    bio: user.bio,
+    createdAt: user.createdAt,
+    updatedAt: user.updatedAt,
+  });
 
   return user;
 };
